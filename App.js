@@ -7,6 +7,7 @@ const db = SQLite.openDatabase('ostoksetdb.db');
 export default function App() {
   const [ostos, setOstos] = useState('');
   const [ostokset, setOstokset] = useState([]);
+  const [ostoksetStr,setOstoksetStr] =useState('');//Bara för att kontrollera
 
   useEffect(() => {
     db.transaction(tx => {
@@ -21,7 +22,6 @@ export default function App() {
       }, null, updateList
     )
   }
-
 
 const updateList = () => {
   db.transaction(tx => {
@@ -39,11 +39,22 @@ const deleteItem = (id) => {
     }, null, updateList,
   )    
 }
+const listaaOstokset = ()=>{
+  let teksti = '';
+  if (ostokset.length > 0){
+    for (let i = 0; i < ostokset.length;i++){
+      teksti += ostokset[i].ostos + " ";
+    }    
+  }
+  setOstoksetStr(teksti);  
+}
 
 return (
   <View style={styles.container}>
     <TextInput placeholder='Ostos' style={styles.input} value={ostos} onChangeText={ostos => setOstos(ostos)} />
     <Button title='Lisää' onPress={saveItem}></Button>
+    <Button title='Listaa ostokset' onPress={listaaOstokset}></Button>
+    <Text>{ostoksetStr}</Text>
 
     <FlatList
     style={{marginLeft : "5%"}}      
